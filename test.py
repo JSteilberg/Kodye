@@ -99,7 +99,6 @@ def getPitches(frames):
         if which != len(fftData) - 1:
             y0, y1, y2 = np.log(fftData[which - 1 : which + 2 :])
             x1 = (y2 - y0) / (4 * y1 - y2 - y0)
-            # find the frequency and output it
             freq = (which + x1) * RATE / CHUNK
         else:
             freq = which * RATE / CHUNK
@@ -110,7 +109,6 @@ def getPitches(frames):
         pitches[-1] = pitches[-1] % 12 + 60
         print("Hertz: %s  Pitch: %s  Volume: %s" % (freq, pitches[-1], volume(frame)))
 
-    # pitches = [ pitch % 12 + 60 for pitch in pitches ]
     return pitches
 
     # smoothedPitches = []
@@ -126,8 +124,17 @@ def getPitches(frames):
 
     # return smoothedPitches
 
+def writeWav(frames):
+    wavFile = wave.open('test.wav', 'wb')
+    wavFile.setnchannels(1)
+    wavFile.setsampwidth(2)
+    wavFile.setframerate(RATE)
+    wavFile.writeframes(b''.join(frames))
+    wavFile.close()
+
 if __name__ == '__main__':
-    seconds = 15
+    seconds = 3
     audio = recordAudio(seconds = seconds)
-    pitches = getPitches(audio)
-    genMidi(pitches, seconds)
+    # pitches = getPitches(audio)
+    # genMidi(pitches, seconds)
+    writeWav(audio)
