@@ -6,12 +6,15 @@ from subprocess import call
 import sys
 
 try:
+    # Amount of time to listen for program
     seconds = int(sys.argv[1])
+    # Name of program
     name = sys.argv[2]
 except e:
-    print("Usage: python kodeye.py [duration] [name]")
+    print("Usage: python kodye.py [duration] [name]")
     print(e)
     exit()
+    
 # Get sounds from user
 audio_in = recordAudio(seconds)
 

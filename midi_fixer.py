@@ -10,6 +10,8 @@ class Note:
 
 # note = [pitch, duration, startTime]
 
+# Turns events into notes
+# [Event] -> [Note]
 def getNotes(events):
     notes = []
     currentTime = 0
@@ -21,6 +23,8 @@ def getNotes(events):
         currentTime += event.time
     return notes
 
+# Takes notes that are both close and the same pitch, and combines them
+# [Note] -> [Note]
 def mergeSameNotes(notes):
     mergedNotes = []
     current = None
@@ -41,6 +45,8 @@ def mergeSameNotes(notes):
 
     return mergedNotes
 
+# Combines notes that are close in pitch and distance
+# [Note] -> [Note]
 def fixAdjacentNotes(notes):
     for note1, note2, note3 in zip(notes, notes[1:], notes[2:]):
         dStart = note2.start - (note1.start + note1.duration)
@@ -52,7 +58,8 @@ def fixAdjacentNotes(notes):
 
     return notes
 
-
+# Combines and removes noise from the output of melodia
+# String, String -> ()
 def fix(fileName, outName):
     outFile = midiutil.MIDIFile()
     notes = getNotes(mido.MidiFile(fileName))
@@ -61,7 +68,7 @@ def fix(fileName, outName):
     notes = mergeSameNotes(notes)
 
     for note in notes:
-        if note.duration > 0.1 and 40 < node.pitch < 90:
+        if note.duration > 0.1 and 40 < note.pitch < 90:
             outFile.addNote(0, 0, pitch=note.pitch, duration=2*note.duration, time=2*note.start, volume=127)
 
     try:
