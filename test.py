@@ -15,7 +15,7 @@ def mkStream(audio, **args):
 def recordAudio(seconds):
     audio = pyaudio.PyAudio()
     stream = mkStream(audio)
-    frames = int(RATE / CHUNK * seconds)
+    frames = int(RATE / CHUNK * seconds) #maybe long?
     result = [ stream.read(CHUNK) for _ in range(frames) ] # this is where the magic happens
     stream.stop_stream()
     stream.close()
@@ -84,13 +84,14 @@ def getPitches(frames):
     frames = rollingMax(frames)
 
     for frame in frames:
-        # if volume(frame) < 0.05:
-        #     pitches.append(None)
-        #     continue
-
+        if volume(frame) < 0.015:
+            pitches.append(None)
+            continue
+		
         # unpack the data and times by the hamming window
         indata = np.array(wave.struct.unpack(
-            "%dh" % (len(frame) / 2), frame)) # * window
+            "%dh" % (len(frame) / 2), frame)) * .53836 #??
+        print(indata)
 
         fftData = abs(np.fft.rfft(indata)) ** 2 # Take the fft and square each value
         which = fftData[1:].argmax() + 1 # find the maximum
@@ -106,7 +107,7 @@ def getPitches(frames):
 
         # 1334 -> 732
 
-        pitches.append(69 + round(12 * math.log(freq / 440, 2)))
+        pitches.append(57 + round(12 * math.log(freq / 440, 2)))
         print("Hertz: %s  Pitch: %s  Volume: %s" % (freq, pitches[-1], volume(frame)))
 
     return pitches
