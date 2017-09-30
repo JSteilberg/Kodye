@@ -61,7 +61,8 @@ def fix(fileName):
     notes = mergeSameNotes(notes)
 
     for note in notes:
-        outFile.addNote(0, 0, pitch=note.pitch, duration=note.duration, time=note.start, volume=127)
+        if note.duration > 0.1:
+            outFile.addNote(0, 0, pitch=note.pitch, duration=note.duration, time=note.start, volume=127)
 
     try:
         os.remove('out.mid')
