@@ -58,13 +58,35 @@ def volume(frame):
     sumSquares = sum((sample / 32768) ** 2 for sample in shorts)
     return math.sqrt(sumSquares / count)
 
+def rollingMax(frames):
+    length = 5
+    lists = [ frames[i:] for i in range(length) ]
+    maxFrames = []
+
+    for i, tempFrames in enumerate(zip(*lists)):
+        if i % length != 0:
+            continue
+
+        maxVol = 0
+        maxFrame = None
+
+        for frame in tempFrames:
+            if volume(frame) >= maxVol:
+                maxVol = volume(frame)
+                maxFrame = frame
+
+        maxFrames.append(maxFrame)
+
+    return maxFrames
+
 def getPitches(frames):
     pitches = []
+    frames = rollingMax(frames)
 
     for frame in frames:
-        if volume(frame) < 0.05:
-            pitches.append(None)
-            continue
+        # if volume(frame) < 0.05:
+        #     pitches.append(None)
+        #     continue
 
         # unpack the data and times by the hamming window
         indata = np.array(wave.struct.unpack(
@@ -87,19 +109,20 @@ def getPitches(frames):
         pitches.append(69 + round(12 * math.log(freq / 440, 2)))
         print("Hertz: %s  Pitch: %s  Volume: %s" % (freq, pitches[-1], volume(frame)))
 
-    # return pitches
+    return pitches
 
-    smoothedPitches = []
-    smoothenNum = 5
-    lists = [ pitches[i:] for i in range(smoothenNum) ]
+    # smoothedPitches = []
+    # smoothenNum = 5
+    # lists = [ pitches[i:] for i in range(smoothenNum) ]
 
-    for i, tempPitches in enumerate(zip(*lists)):
-        if i % smoothenNum == 0:
-            from collections import Counter
-            smoothedPitches.append(Counter(tempPitches).most_common(1)[0][0]) # mode
+    # for i, tempPitches in enumerate(zip(*lists)):
+    #     if i % smoothenNum == 0:
+
+            # from collections import Counter
+            # smoothedPitches.append(Counter(tempPitches).most_common(1)[0][0]) # mode
             # smoothedPitches.append(round(sum(tempPitches) / smoothenNum)) # mean
 
-    return smoothedPitches
+    # return smoothedPitches
 
 if __name__ == '__main__':
     seconds = 5
