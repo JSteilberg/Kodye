@@ -12,16 +12,30 @@ def to_brainfrick(note_num):
         67 : "]",
         69 : ".",
         71 : ","
-        }.get(note_num, "oops!")
+        }.get(note_num, "_")
 
-mid = MidiFile("./audio_samples/scale.mid")
-for i, track in enumerate(mid.tracks):
-    print("Track {}: {}".format(i, track.name))
+def convert(fileName):
+    midi = MidiFile('test.midi')
+    
+    for track in midi.tracks:
+        brainfrick = ''
 
-    brainfrick = ""
-    for msg in track:
-        if msg.is_meta or msg.type == "note_off":
-            continue
-        brainfrick += to_brainfrick((msg.bytes()[1] % 12) + 60)
+        for msg in track:
+            if not msg.is_meta and msg.type != 'note_off':
+                brainfrick += to_brainfrick((msg.bytes()[1] % 12) + 60)
 
-    print(brainfrick)
+    return brainfrick
+
+# mid = MidiFile("test.midi")
+# for i, track in enumerate(mid.tracks):
+#     print("Track {}: {}".format(i, track.name))
+
+#     brainfrick = ""
+#     for msg in track:
+#         if msg.is_meta or msg.type == "note_off":
+#             continue
+#         brainfrick += to_brainfrick((msg.bytes()[1] % 12) + 60)
+
+#     print(brainfrick)
+if __name__ == '__main__':
+    print(convert('test.midi'))
