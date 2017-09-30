@@ -23,6 +23,7 @@ try:
     os.remove(name + '.wav')
     os.remove(name + '._fiexed.mid')
 except:
+    print("problem overwriting")
     pass
 
 writeWav(audio_in, name + ".wav")
