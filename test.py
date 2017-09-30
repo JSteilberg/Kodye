@@ -91,7 +91,6 @@ def getPitches(frames):
         # unpack the data and times by the hamming window
         indata = np.array(wave.struct.unpack(
             "%dh" % (len(frame) / 2), frame)) * .53836 #??
-        print(indata)
 
         fftData = abs(np.fft.rfft(indata)) ** 2 # Take the fft and square each value
         which = fftData[1:].argmax() + 1 # find the maximum
