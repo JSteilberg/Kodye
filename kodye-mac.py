@@ -6,27 +6,24 @@ from subprocess import call
 import os, sys
 
 try:
-    # Amount of time to listen for program
-    seconds = int(sys.argv[1])
-    # Name of program
-    name = sys.argv[2]
+    name = sys.argv[1]
 except e:
-    print("Usage: python kodye.py [duration] [name]")
+    print("Usage: python kodye.py [name of output file]")
     print(e)
     exit()
     
 # Get sounds from user
-audio_in = recordAudio(seconds)
+#audio_in = recordAudio(seconds)
+
+# Get sounds from user
+recordAudio(name + ".wav")
 
 try:
     os.remove(name + '.mid')
-    os.remove(name + '.wav')
-    os.remove(name + '._fiexed.mid')
 except:
-    print("problem overwriting")
     pass
 
-writeWav(audio_in, name + ".wav")
+#writeWav(audio_in, name + ".wav")
 
 
 
