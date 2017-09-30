@@ -3,7 +3,7 @@ from midi_fixer import fix
 from translate import midi_to_brainfrick, brainfrick_to_midi
 from subprocess import call
 
-import sys
+import os, sys
 
 try:
     # Amount of time to listen for program
@@ -19,6 +19,11 @@ except e:
 audio_in = recordAudio(seconds)
 
 writeWav(audio_in, name + ".wav")
+
+try:
+    os.remove(name + '.mid')
+except:
+    pass
 
 call(["./lib/sonic_annotator/sonic-annotator.exe",
      "-d",
