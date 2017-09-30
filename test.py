@@ -1,3 +1,5 @@
+import translate
+import mido
 import pyaudio
 import wave
 import numpy as np
@@ -12,6 +14,12 @@ CHUNK = 1024
 def mkStream(audio, **args):
     return audio.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK, **args)
 
+def playMidi(fileName):
+    port = mido.open_output()
+    midi = mido.MidiFile(fileName)
+    for msg in midi.play():
+        port.send(msg)
+
 # records audio from the mic
 # Int -> [Frame]
 def recordAudio(seconds):
@@ -25,7 +33,7 @@ def recordAudio(seconds):
     return result
 
 # plays the audio out loud
-# Frame -> ()
+# [Frame] -> ()
 def playAudio(frames):
     play = pyaudio.PyAudio()
     stream = mkStream(play, output=True)
@@ -89,13 +97,17 @@ def rollingMax(frames):
 def getPitches(frames):
     pitches = []
     frames = rollingMax(frames)
+    prevExists = True
 
     for frame in frames:
-        if volume(frame) < 0.03:
+        if volume(frame) < 0.025:
+            if prevExists:
+                pitches.append(None)
+
+            prevExists = False
             print("None")
-            pitches.append(None)
             continue
-		
+
         # unpack the data and times by the hamming window
         indata = np.array(wave.struct.unpack(
             "%dh" % (len(frame) / 2), frame)) * .53836 #??
@@ -113,25 +125,38 @@ def getPitches(frames):
 
         # 1334 -> 732
 
-        # freq = calcPitch2(frame)
-
         pitch = 69 + round(12 * math.log(freq / 440, 2))
 
         if 50 < pitch < 80:
+            pitch = pitch % 12 + 60
             pitches.append(pitch)
+            print("Hertz: %s  Pitch: %s  Volume: %s" % (int(freq), pitch, volume(frame)))
+            prevExists = True
         else:
-            print("Pitch outside range:")
+            prevExists = False
+            print("Pitch outside range")
+            if prevExists:
+                pitches.append(None)
 
-        print("Hertz: %s  Pitch: %s  Volume: %s" % (int(freq), pitch, volume(frame)))
+    return pitches
 
+def smoothenPitches(pitches, seconds):
+    print(pitches)
+    secondsPerPitch = 0.5
+    # desiredPitches = seconds / secondsPerPitch
+    # pitchesPerDesiredPitch = pitches / desiredPitches
+    pitchesPerDesiredPitch = int(len(pitches) * secondsPerPitch / seconds)
+    print("smoothenNum: %s" % pitchesPerDesiredPitch)
+    
     smoothedPitches = []
-    smoothenNum = 3
-    lists = [ pitches[i:] for i in range(smoothenNum) ]
+    lists = [ pitches[i:] for i in range(pitchesPerDesiredPitch) ]
 
     for i, tempPitches in enumerate(zip(*lists)):
-        if i % smoothenNum == 0:
-            smoothedPitches.append(Counter(tempPitches).most_common(1)[0][0]) # mode
+        if i % pitchesPerDesiredPitch == 0:
+            mode = Counter(tempPitches).most_common(1)[0][0]
+            smoothedPitches.append(mode)
 
+    print(smoothedPitches)
     return smoothedPitches
 
 def writeWav(frames):
@@ -143,8 +168,9 @@ def writeWav(frames):
     wavFile.close()
 
 if __name__ == '__main__':
-    seconds = 4
-    audio = recordAudio(seconds = seconds)
-    pitches = getPitches(audio)
+    seconds = 5
+    audio = recordAudio(seconds)
+    pitches = smoothenPitches(getPitches(audio), seconds)
     genMidi(pitches, seconds)
-    # writeWav(audio)
+    playMidi('test.midi')
+    print(translate.convert('test.midi'))
