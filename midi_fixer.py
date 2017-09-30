@@ -68,7 +68,7 @@ def fix(fileName, outName):
     notes = mergeSameNotes(notes)
 
     for note in notes:
-        if note.duration > 0.1 and 40 < node.pitch < 90:
+        if note.duration > 0.1 and 40 < note.pitch < 90:
             outFile.addNote(0, 0, pitch=note.pitch, duration=2*note.duration, time=2*note.start, volume=127)
 
     try:
