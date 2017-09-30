@@ -32,8 +32,8 @@ def playAudio(frames):
     stream.close()
     play.terminate()
 
-def writeWav(frames):
-    wavFile = wave.open('test.wav', 'wb')
+def writeWav(frames, outName):
+    wavFile = wave.open(outName, 'wb')
     wavFile.setnchannels(1)
     wavFile.setsampwidth(2)
     wavFile.setframerate(RATE)

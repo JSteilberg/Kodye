@@ -53,7 +53,7 @@ def fixAdjacentNotes(notes):
     return notes
 
 
-def fix(fileName):
+def fix(fileName, outName):
     outFile = midiutil.MIDIFile()
     notes = getNotes(mido.MidiFile(fileName))
     notes = mergeSameNotes(notes)
@@ -65,11 +65,11 @@ def fix(fileName):
             outFile.addNote(0, 0, pitch=note.pitch, duration=2*note.duration, time=2*note.start, volume=127)
 
     try:
-        os.remove('out.mid')
+        os.remove(outName)
     except:
         pass
 
-    with open('out.mid', 'wb') as f:
+    with open(outName, 'wb') as f:
         outFile.writeFile(f)
 
 if __name__ == '__main__':

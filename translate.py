@@ -14,10 +14,10 @@ def to_brainfrick(note_num):
         67 : "]",
         69 : ".",
         71 : ","
-        }.get(note_num, "_")
+        }.get(note_num, "")
 
-def convert(fileName):
-    midi = MidiFile('test.midi')
+def midi_to_brainfrick(file_name):
+    midi = MidiFile(file_name)
     
     for track in midi.tracks:
         brainfrick = ''
@@ -26,8 +26,7 @@ def convert(fileName):
             if not msg.is_meta and msg.type != 'note_off':
                 brainfrick += to_brainfrick((msg.bytes()[1] % 12) + 60)
 
-    print(brainfrick)
-
+    return brainfrick
 	
 def brainfrick_to_midi(bf_string):
     mid = MidiFile()
