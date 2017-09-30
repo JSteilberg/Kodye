@@ -18,12 +18,16 @@ except e:
 # Get sounds from user
 audio_in = recordAudio(seconds)
 
-writeWav(audio_in, name + ".wav")
-
 try:
     os.remove(name + '.mid')
+    os.remove(name + '.wav')
+    os.remove(name + '._fiexed.mid')
 except:
     pass
+
+writeWav(audio_in, name + ".wav")
+
+
 
 call(["./libMac/sonic_annotator/sonic-annotator", # mac file change here
      "-d",
