@@ -1,6 +1,8 @@
 import pyaudio
 import wave
 import os, sys
+import time
+from pynput.keyboard import Controller, Listener
 
 # Sample rate, basically how many times/sec we grab a sound value
 RATE = 44100
@@ -8,26 +10,50 @@ RATE = 44100
 # Buffer to load
 CHUNK = 1024
 
+recording = False
+
 # Makes a stream from pyaudio
 # PyAudio, args -> AudioStream
 def mkStream(audio, **args):
     return audio.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK, **args)
 
+
 # records audio from the mic
 # Int -> [Frame]
-def recordAudio(seconds):
+def recordAudio(outName):
+    frames = []
+    global recording
+    recording = True
+
+    def callback(in_data, frame_count, time_info, status):
+        if recording:
+            frames.append(in_data)
+            state = pyaudio.paContinue
+        else:
+            writeWav(frames, outName)
+            state = pyaudio.paComplete
+
+        return (None, state)
+
     audio = pyaudio.PyAudio()
-    # Get the audio as a stream
-    stream = mkStream(audio)
-    # Divide the stream into frames, sort of like a video
-    frames = int(RATE / CHUNK * seconds)
-    result = [ stream.read(CHUNK) for _ in range(frames) ] # this is where the magic happens
+    stream = mkStream(audio, stream_callback=callback) # Get the audio as a stream
+    stream.start_stream()
+
+
+    def on_press(key):
+        global recording
+        recording = False
+        return False
+
+    Listener(on_press=on_press).start()
+
+    while stream.is_active():
+        time.sleep(0.25)
 
     # Cleanup
     stream.stop_stream()
     stream.close()
     audio.terminate()
-    return result
 
 # Plays the audio out loud
 # [Frame] -> ()
@@ -65,4 +91,4 @@ def writeWav(frames, outName):
 
 
 if __name__ == '__main__':
-    writeWav(recordAudio(seconds = 5))
+    recordAudio('keytest.wav')
