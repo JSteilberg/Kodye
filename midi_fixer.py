@@ -1,6 +1,6 @@
 import mido
 import midiutil
-import os
+import os, sys
 
 def fix(fileName):
     inFile = mido.MidiFile(fileName)
@@ -40,3 +40,6 @@ def fix(fileName):
 
     with open('out.mid', 'wb') as f:
         outFile.writeFile(f)
+
+if __name__ == '__main__':
+    fix(sys.argv[1])
