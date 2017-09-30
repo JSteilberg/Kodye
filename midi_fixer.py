@@ -62,7 +62,7 @@ def fix(fileName):
 
     for note in notes:
         if note.duration > 0.1:
-            outFile.addNote(0, 0, pitch=note.pitch, duration=note.duration, time=note.start, volume=127)
+            outFile.addNote(0, 0, pitch=note.pitch, duration=2*note.duration, time=2*note.start, volume=127)
 
     try:
         os.remove('out.mid')
