@@ -25,7 +25,7 @@ try:
 except:
     pass
 
-call(["./libMac/sonic_annotator/sonic-annotator",
+call(["./libMac/sonic_annotator/sonic-annotator", # mac file change here
      "-d",
      "vamp:mtg-melodia:melodia:melody",
      "./" + name + ".wav",
