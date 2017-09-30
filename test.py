@@ -84,7 +84,7 @@ def getPitches(frames):
     frames = rollingMax(frames)
 
     for frame in frames:
-        if volume(frame) < 0.015:
+        if volume(frame) < 0.03:
             pitches.append(None)
             continue
 		
@@ -107,9 +107,11 @@ def getPitches(frames):
 
         # 1334 -> 732
 
-        pitches.append(57 + round(12 * math.log(freq / 440, 2)))
+        pitches.append(69 + round(12 * math.log(freq / 440, 2)))
+        pitches[-1] = pitches[-1] % 12 + 60
         print("Hertz: %s  Pitch: %s  Volume: %s" % (freq, pitches[-1], volume(frame)))
 
+    # pitches = [ pitch % 12 + 60 for pitch in pitches ]
     return pitches
 
     # smoothedPitches = []
