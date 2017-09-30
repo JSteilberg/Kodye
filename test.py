@@ -41,9 +41,13 @@ def genMidi(pitches, seconds):
 
     midiFile = MIDIFile()
     midiFile.addTempo(0, 0, 60 * len(pitches) / seconds)
+    pauses = 0
 
     for i, pitch in enumerate(pitches):
-        midiFile.addNote(0, 0, pitch, i, 1, 127)
+        if pitch == None:
+            pauses += 1
+        else:
+            midiFile.addNote(0, 0, pitch, i + pauses, 1, 127)
 
     with open('test.midi', 'wb') as f:
         midiFile.writeFile(f)
@@ -59,6 +63,7 @@ def getPitches(frames):
 
     for frame in frames:
         if volume(frame) < 0.05:
+            pitches.append(None)
             continue
 
         # unpack the data and times by the hamming window
