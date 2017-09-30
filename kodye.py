@@ -6,19 +6,13 @@ from subprocess import call
 import os, sys
 
 try:
-    # Amount of time to listen for program
-    seconds = int(sys.argv[1])
-    # Name of program
-    name = sys.argv[2]
-except e:
-    print("Usage: python kodye.py [duration] [name]")
-    print(e)
+    name = sys.argv[1]
+except:
+    print("Usage: python kodye.py [name of output file]")
     exit()
     
 # Get sounds from user
-audio_in = recordAudio(seconds)
-
-writeWav(audio_in, name + ".wav")
+recordAudio(name + ".wav")
 
 try:
     os.remove(name + '.mid')
