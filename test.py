@@ -127,7 +127,7 @@ def getPitches(frames):
     # return smoothedPitches
 
 if __name__ == '__main__':
-    seconds = 5
+    seconds = 15
     audio = recordAudio(seconds = seconds)
     pitches = getPitches(audio)
     genMidi(pitches, seconds)
