@@ -29,7 +29,7 @@ def mergeSameNotes(notes):
     mergedNotes = []
     current = None
 
-    for note in notes:
+    for i, note in enumerate(notes):
         if current is None:
             # start a new note
             current = note
@@ -42,6 +42,9 @@ def mergeSameNotes(notes):
             # finish current note
             mergedNotes.append(current)
             current = note
+
+            if i == len(notes) - 1: # if it's the last note
+                mergedNotes.append(note)
 
     return mergedNotes
 
