@@ -1,5 +1,7 @@
 # HHacks2017
 
+![kanye-logo](https://user-images.githubusercontent.com/26828467/31050514-0586d2fc-a61a-11e7-9ea7-34bccde69576.png)
+
 ## What is Kodye?
 
 Hands-free coding! Have you ever wanted to code while driving? For the first time ever, now you can, with Kodye. Using Kodye, you can hum or whistle at your computer, and your tones will be translated into instructions for the computer to follow.
