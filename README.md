@@ -17,4 +17,4 @@ Kodye maps eight different tones to the eight different instructions of [Brainfu
 * A4: Output the byte at the data pointer.
 * B4: Accept one byte of input, storing its value in the byte at the data pointer.
 
-Kodye is implemented in Python. Usage is `python kodye.py [name of output file]` on pc. Usage on mac is 'python kodye-mac.py [name of output file]'. Both versions will stop recording on keypress.
+Kodye is implemented in Python. Usage is `python kodye.py [name of output file]` on pc. Usage on mac is `python kodye-mac.py [name of output file]` . Both versions will stop recording on keypress.
