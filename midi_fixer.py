@@ -43,8 +43,8 @@ def mergeSameNotes(notes):
             mergedNotes.append(current)
             current = note
 
-            if i == len(notes) - 1: # if it's the last note
-                mergedNotes.append(note)
+        if i == len(notes) - 1: # if it's the last note
+            mergedNotes.append(current)
 
     return mergedNotes
 
