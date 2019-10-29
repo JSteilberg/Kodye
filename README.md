@@ -1,4 +1,4 @@
-# HHacks2017
+# Kodye
 
 ![kanye-logo](https://user-images.githubusercontent.com/26828467/31050514-0586d2fc-a61a-11e7-9ea7-34bccde69576.png)
 
@@ -18,3 +18,12 @@ Kodye maps eight different tones to the eight different instructions of [Brainfu
 * B4: Accept one byte of input, storing its value in the byte at the data pointer.
 
 Kodye is implemented in Python. Usage is `python kodye.py [name of output file]` on pc. Usage on mac is `python kodye-mac.py [name of output file]` . Both versions will stop recording on keypress.
+
+## Installation
+
+### Linux
+1. Install [sonic annotator](https://code.soundsoftware.ac.uk/projects/sonic-annotator/files).
+2. Install [Melodia](https://www.upf.edu/web/mtg/melodia). Make sure to move the files within (not the folder itself) to `/usr/local/lib/vamp`. No, the folder won't exist; just create it and you'll be fine. 
+3. Run `sudo apt-get install portaudio19-dev` 
+4. Then run `pip install -r requirements.txt`
+5. Run kodye.py
