@@ -19,7 +19,7 @@ try:
 except:
     pass
 
-call(["./lib/sonic_annotator/sonic-annotator.exe",
+call(["sonic-annotator",
      "-d",
      "vamp:mtg-melodia:melodia:melody",
      "./" + name + ".wav",
